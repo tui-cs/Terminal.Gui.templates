@@ -15,6 +15,13 @@ agents="$proj_dir/AGENTS.md"
 tg_version=$(grep -hoE 'Terminal\.Gui" Version="[^"]+"' "$proj_dir"/*.csproj | head -1 | sed -E 's/.*Version="([^"]+)".*/\1/')
 [ -n "$tg_version" ] || { echo "::error::Could not find the Terminal.Gui version in $proj_dir"; exit 1; }
 
+# TEMP: the snippets restore in a temp dir OUTSIDE this repo, where the repo's nuget.config
+# (and its vendored ./local_packages feed for the Terminal.Gui 2.5.0 preview from
+# tui-cs/Terminal.Gui PR #5416) is not visible. Point restore at the feed by absolute path.
+# Remove when Terminal.Gui 2.5.x is on nuget.org.
+repo_root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+local_feed="$repo_root/local_packages"
+
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 
@@ -43,6 +50,8 @@ for snip in "$work"/snip-*.cs; do
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <!-- TEMP: vendored Terminal.Gui 2.5.0 preview feed (see comment at top of script). -->
+    <RestoreAdditionalProjectSources>$local_feed</RestoreAdditionalProjectSources>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Terminal.Gui" Version="$tg_version" />

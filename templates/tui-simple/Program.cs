@@ -8,12 +8,12 @@
 
 // v2 splits the old monolithic `using Terminal.Gui;` into focused namespaces:
 using Terminal.Gui.App;           // Application, IApplication, MessageBox
-using Terminal.Gui.Configuration; // ConfigurationManager
 using Terminal.Gui.ViewBase;      // View, Pos, Dim
 using Terminal.Gui.Views;         // Window, Label, Button
 
-// Enable the configuration/theme system before creating the app (standard first line).
-ConfigurationManager.Enable (ConfigLocations.All);
+// Configuration/themes are ON by default in v2 — settings load automatically from
+// ~/.tui/config.json, ./.tui/*.json, and the TUI_CONFIG env var (no opt-in call needed;
+// the old `ConfigurationManager.Enable (...)` is gone in 2.5+).
 
 // The v2 lifecycle is INSTANCE-BASED and disposable — NOT the static v1
 // Application.Init() / Application.Run() / Application.Shutdown():

@@ -20,11 +20,10 @@ log** — to verify visuals, run under a PTY recorder (`tuirec`) or drive it hea
 ## The canonical minimal app (this is the shape — copy it)
 ```csharp
 using Terminal.Gui.App;           // Application, IApplication, MessageBox
-using Terminal.Gui.Configuration; // ConfigurationManager
 using Terminal.Gui.ViewBase;      // View, Pos, Dim
 using Terminal.Gui.Views;         // Window, Label, Button, ...
 
-ConfigurationManager.Enable (ConfigLocations.All);
+// Configuration/themes load automatically (~/.tui, ./.tui, TUI_CONFIG) — no opt-in call.
 
 // INSTANCE lifecycle — not static Init/Run/Shutdown:
 Application.Create ().Run<MainWindow> ().Dispose ();
@@ -56,6 +55,7 @@ internal sealed class MainWindow : Window   // bordered root; use `Runnable` for
 | `LayoutStyle.Computed` | removed — layout is always declarative via `Pos`/`Dim` |
 | `new RadioGroup (…)` | `new OptionSelector { … }` |
 | `Colors.ColorSchemes["x"]` | `Schemes.Resolve ("x")` |
+| `ConfigurationManager.Enable (ConfigLocations.All);` | removed in 2.5 — configuration/themes load automatically at startup (`TuiConfigurationBuilder` for advanced use) |
 
 ## Layout: `Pos` / `Dim` (don't hardcode coordinates)
 - `X`/`Y`: `Pos.Center ()`, `Pos.Right (otherView)`, `Pos.Percent (25)`, `Pos.AnchorEnd ()`, or an `int`.

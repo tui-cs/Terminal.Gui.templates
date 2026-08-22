@@ -2,7 +2,9 @@
 
 	<PropertyGroup>
 		<PackageType>Template</PackageType>
-		<PackageVersion>2.4.17</PackageVersion>
+		<!-- TEMP: tracks the vendored Terminal.Gui 2.5.0 preview from tui-cs/Terminal.Gui PR #5416
+		     (see /nuget.config); swap to the public 2.5.x version when it ships on nuget.org. -->
+		<PackageVersion>2.5.0-tig-remove-cm-followup.1</PackageVersion>
 		<PackageId>Terminal.Gui.Templates</PackageId>
 		<Title>Terminal.Gui templates</Title>
 		<Authors>tui-cs</Authors>

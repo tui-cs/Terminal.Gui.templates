@@ -350,3 +350,8 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+
+# TEMP: vendored Terminal.Gui 2.5.0 preview packages (tui-cs/Terminal.Gui PR #5416).
+# Remove with the "tgui-pr-5416" source in nuget.config when 2.5.x is on nuget.org.
+!local_packages/*.nupkg
+!local_packages/*.snupkg
