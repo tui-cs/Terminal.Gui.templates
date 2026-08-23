@@ -54,7 +54,7 @@ internal sealed class MainWindow : Window   // bordered root; use `Runnable` for
 | `view.Bounds` | `view.Viewport` |
 | `LayoutStyle.Computed` | removed — layout is always declarative via `Pos`/`Dim` |
 | `new RadioGroup (…)` | `new OptionSelector { … }` |
-| `Colors.ColorSchemes["x"]` | `Schemes.Resolve ("x")` |
+| `Colors.ColorSchemes["x"]` | `SchemeManager.GetScheme ("x")` (`Terminal.Gui.Configuration`) |
 | `ConfigurationManager.Enable (ConfigLocations.All);` | removed in 2.5 — configuration/themes load automatically at startup (`TuiConfigurationBuilder` for advanced use) |
 
 ## Layout: `Pos` / `Dim` (don't hardcode coordinates)

@@ -13,8 +13,9 @@ using Terminal.Gui.ViewBase;      // View, Pos, Dim
 using Terminal.Gui.Views;         // Runnable, Label, Button, MenuBar, StatusBar, Shortcut
 
 // Configuration/themes are ON by default in v2 — settings load automatically from
-// ~/.tui/config.json, ./.tui/*.json, and the TUI_CONFIG env var (no opt-in call needed;
-// the old `ConfigurationManager.Enable (...)` is gone in 2.5+).
+// ~/.tui/config.json, ./.tui/config.json (plus {AppName}.config.json variants), and the
+// TUI_CONFIG env var (no opt-in call needed; the old
+// `ConfigurationManager.Enable (...)` is gone in 2.5+).
 
 // Instance lifecycle — NOT static Init/Run/Shutdown:  Create() -> Run<T>() -> Dispose().
 Application
