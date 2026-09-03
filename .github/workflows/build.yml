@@ -18,9 +18,8 @@ jobs:
         with:
           dotnet-version: '10.x'
 
-      # TEMP: while the templates pin public nuget.org Terminal.Gui 2.5.0-develop.55
-      # (TG #5416 / #5630), do NOT overwrite the pins with the latest stable.
-      # Re-enable these two steps (remove the `if: false`) when swapping to stable 2.5.x.
+      # Pin public nuget.org Terminal.Gui 2.5.0-beta.1. Auto-bump stays off so CI
+      # does not overwrite it with the latest stable (still 2.4.x).
       - name: Get latest stable Terminal.Gui version
         id: get_version
         if: false  # TEMP — see above

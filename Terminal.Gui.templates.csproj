@@ -2,8 +2,7 @@
 
 	<PropertyGroup>
 		<PackageType>Template</PackageType>
-		<!-- TEMP: public 2.5.0-develop.55 (TG #5416 / #5630). Swap to stable 2.5.x before merge. -->
-		<PackageVersion>2.5.0-develop.55</PackageVersion>
+		<PackageVersion>2.5.0-beta.1</PackageVersion>
 		<PackageId>Terminal.Gui.Templates</PackageId>
 		<Title>Terminal.Gui templates</Title>
 		<Authors>tui-cs</Authors>

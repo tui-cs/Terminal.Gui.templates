@@ -10,8 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <!-- TEMP: public 2.5.0-develop.55 (TG #5416 / #5630). Swap to stable 2.5.x before merge. -->
-	  <PackageReference Include="Terminal.Gui" Version="2.5.0-develop.55" />
+	  <PackageReference Include="Terminal.Gui" Version="2.5.0-beta.1" />
   </ItemGroup>
 
   <ItemGroup>

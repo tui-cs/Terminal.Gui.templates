@@ -11,8 +11,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="xunit" Version="2.9.2" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
-    <!-- TEMP: public 2.5.0-develop.55 (TG #5416 / #5630). Swap to stable 2.5.x before merge. -->
-    <PackageReference Include="Terminal.Gui" Version="2.5.0-develop.55" />
+    <PackageReference Include="Terminal.Gui" Version="2.5.0-beta.1" />
   </ItemGroup>
 
   <ItemGroup>
