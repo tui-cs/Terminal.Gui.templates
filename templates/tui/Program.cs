@@ -8,12 +8,14 @@
 // -----------------------------------------------------------------------------
 
 using Terminal.Gui.App;           // Application, IApplication, MessageBox
-using Terminal.Gui.Configuration; // ConfigurationManager
 using Terminal.Gui.Input;         // Key, Command
 using Terminal.Gui.ViewBase;      // View, Pos, Dim
 using Terminal.Gui.Views;         // Runnable, Label, Button, MenuBar, StatusBar, Shortcut
 
-ConfigurationManager.Enable (ConfigLocations.All);
+// Configuration/themes are ON by default in v2 — settings load automatically from
+// ~/.tui/config.json, ./.tui/config.json (plus {AppName}.config.json variants), and the
+// TUI_CONFIG env var (no opt-in call needed; the old
+// `ConfigurationManager.Enable (...)` is gone in 2.5+).
 
 // Instance lifecycle — NOT static Init/Run/Shutdown:  Create() -> Run<T>() -> Dispose().
 Application

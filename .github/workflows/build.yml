@@ -18,8 +18,11 @@ jobs:
         with:
           dotnet-version: '10.x'
 
+      # Pin public nuget.org Terminal.Gui 2.5.0-beta.1. Auto-bump stays off so CI
+      # does not overwrite it with the latest stable (still 2.4.x).
       - name: Get latest stable Terminal.Gui version
         id: get_version
+        if: false  # TEMP — see above
         run: |
           # Pick the latest STABLE Terminal.Gui from NuGet.
           # NOTE: the old selector matched only -alpha/-beta and sorted by the LAST dotted
@@ -36,6 +39,7 @@ jobs:
           echo "latest_version=$latest_version" >> "$GITHUB_OUTPUT"
 
       - name: Update Terminal.Gui dependency in templates
+        if: false  # TEMP — see above
         run: |
           v='${{ steps.get_version.outputs.latest_version }}'
           sed -i "s|\(<PackageVersion>\)[^<]*\(</PackageVersion>\)|\1$v\2|" Terminal.Gui.templates.csproj
