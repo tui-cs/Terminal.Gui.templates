@@ -18,10 +18,9 @@ jobs:
         with:
           dotnet-version: '10.x'
 
-      # TEMP: while the templates pin the vendored Terminal.Gui 2.5.0 preview from
-      # tui-cs/Terminal.Gui PR #5416 (see nuget.config + local_packages/), do NOT overwrite the
-      # pins with the latest stable from nuget.org. Re-enable these two steps (remove the
-      # `if: false`) when Terminal.Gui 2.5.x ships publicly and the vendored feed is removed.
+      # TEMP: while the templates pin public nuget.org Terminal.Gui 2.5.0-develop.55
+      # (TG #5416 / #5630), do NOT overwrite the pins with the latest stable.
+      # Re-enable these two steps (remove the `if: false`) when swapping to stable 2.5.x.
       - name: Get latest stable Terminal.Gui version
         id: get_version
         if: false  # TEMP — see above
@@ -94,22 +93,6 @@ jobs:
         if: matrix.job == 'test-template'
         run: |
           set -euo pipefail
-          # TEMP: rendered projects land under /tmp, outside the repo tree, so the repo's
-          # nuget.config (with the vendored Terminal.Gui 2.5.0 preview feed from
-          # tui-cs/Terminal.Gui PR #5416) is not visible to their restores. Drop a nuget.config
-          # into each rendered project pointing at the feed by absolute path. Remove this
-          # helper (and its call sites) when Terminal.Gui 2.5.x is on nuget.org.
-          temp_feed() {
-            cat > "$1/nuget.config" <<EOF
-          <?xml version="1.0" encoding="utf-8"?>
-          <configuration>
-            <packageSources>
-              <add key="tgui-pr-5416" value="$GITHUB_WORKSPACE/local_packages" />
-              <add key="nuget.org" value="https://api.nuget.org/v3/index.json" />
-            </packageSources>
-          </configuration>
-          EOF
-          }
           # tui-designer is intentionally not tested/packaged yet (designer snapshot needs
           # regeneration against current Terminal.Gui). Test the packaged template(s).
           for t in tui-simple tui; do
@@ -117,7 +100,6 @@ jobs:
             rm -rf "/tmp/$t-test"
             dotnet new install "./templates/$t"
             dotnet new "$t" -n SmokeApp -o "/tmp/$t-test"
-            temp_feed "/tmp/$t-test"  # TEMP — see above
             # Verify the agent guidance is emitted (the whole point of these templates).
             for f in AGENTS.md CLAUDE.md .cursorrules .windsurfrules .aider.md; do
               test -f "/tmp/$t-test/$f" || { echo "::error::$t did not emit $f"; exit 1; }
@@ -132,7 +114,6 @@ jobs:
           echo "::group::tui --WithTests"
           rm -rf /tmp/with-tests
           dotnet new tui -n WithTestsApp --WithTests -o /tmp/with-tests
-          temp_feed /tmp/with-tests  # TEMP — see above
           test -d /tmp/with-tests/Tests || { echo "::error::--WithTests did not emit Tests/"; exit 1; }
           dotnet test /tmp/with-tests/Tests
           echo "::endgroup::"

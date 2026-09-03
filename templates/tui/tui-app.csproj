@@ -9,9 +9,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- TEMP: 2.5.0 preview vendored from tui-cs/Terminal.Gui PR #5416 (see /nuget.config);
-         swap to the public 2.5.x package when it ships on nuget.org. -->
-    <PackageReference Include="Terminal.Gui" Version="2.5.0-tig-remove-cm-followup.2" />
+    <!-- TEMP: public 2.5.0-develop.55 (TG #5416 / #5630). Swap to stable 2.5.x before merge. -->
+    <PackageReference Include="Terminal.Gui" Version="2.5.0-develop.55" />
   </ItemGroup>
 
   <!-- The optional test project (the WithTests option) lives under Tests/ in this folder;
