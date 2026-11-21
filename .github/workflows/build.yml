@@ -2,6 +2,10 @@ name: Build and package
 
 on: push
 
+permissions:
+  contents: read
+  id-token: write  # NuGet Trusted Publishing (OIDC)
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -56,9 +60,42 @@ jobs:
           # csprojs under templates/ are content, not buildable projects of this package).
           dotnet pack Terminal.Gui.templates.csproj -c Release
 
+      # Configure vars.NUGET_TRUSTED_PUBLISHING_USER with the NuGet.org profile name
+      # and create a matching Trusted Publishing policy (workflow file: build.yml)
+      # to enable OIDC. The NUGET_KEY secret remains a fallback.
+      - name: NuGet login (Trusted Publishing)
+        id: nuget-login
+        if: matrix.job == 'package-template' && contains(github.ref, 'refs/tags/v') && vars.NUGET_TRUSTED_PUBLISHING_USER != ''
+        continue-on-error: true
+        uses: NuGet/login@v1
+        with:
+          user: ${{ vars.NUGET_TRUSTED_PUBLISHING_USER }}
+
+      - name: Select NuGet publishing credential
+        id: nuget-credential
+        if: matrix.job == 'package-template' && contains(github.ref, 'refs/tags/v')
+        env:
+          TRUSTED_PUBLISHING_API_KEY: ${{ steps.nuget-login.outputs.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ secrets.NUGET_KEY }}
+        run: |
+          if [ -n "$TRUSTED_PUBLISHING_API_KEY" ]; then
+            echo "::add-mask::$TRUSTED_PUBLISHING_API_KEY"
+            echo "api-key=$TRUSTED_PUBLISHING_API_KEY" >> "$GITHUB_OUTPUT"
+            echo "Using NuGet Trusted Publishing."
+          elif [ -n "$NUGET_API_KEY" ]; then
+            echo "::add-mask::$NUGET_API_KEY"
+            echo "api-key=$NUGET_API_KEY" >> "$GITHUB_OUTPUT"
+            echo "::warning::Trusted Publishing unavailable; using the NUGET_KEY secret."
+          else
+            echo "::error::NuGet publishing credentials are unavailable. Configure vars.NUGET_TRUSTED_PUBLISHING_USER and its NuGet Trusted Publishing policy, or set the NUGET_KEY secret."
+            exit 1
+          fi
+
       - name: Publish to NuGet
         if: matrix.job == 'package-template' && contains(github.ref, 'refs/tags/v')
-        run: dotnet nuget push ./bin/Release/*.nupkg --api-key ${{ secrets.NUGET_KEY }} --source https://api.nuget.org/v3/index.json
+        env:
+          NUGET_API_KEY: ${{ steps.nuget-credential.outputs.api-key }}
+        run: dotnet nuget push ./bin/Release/*.nupkg --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json
 
       - name: Verify the PUBLISHED package installs from NuGet and works
         if: matrix.job == 'package-template' && contains(github.ref, 'refs/tags/v')
