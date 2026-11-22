@@ -102,7 +102,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          v='${{ steps.get_version.outputs.latest_version }}'
+          v=$(sed -n 's:.*<PackageVersion>\([^<]*\)</PackageVersion>.*:\1:p' Terminal.Gui.templates.csproj)
+          [ -n "$v" ] || { echo "::error::could not read PackageVersion from csproj"; exit 1; }
           idx="https://api.nuget.org/v3-flatcontainer/terminal.gui.templates/index.json"
           echo "Waiting for Terminal.Gui.Templates $v to index on NuGet…"
           for i in $(seq 1 60); do  # up to ~20 min
